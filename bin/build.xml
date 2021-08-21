@@ -1,0 +1,158 @@
+<project name="Amigram" default="compileAndRun" basedir=".">
+
+	<description>
+    Class file for DFKI's "Amigram" tool, developed
+	in the AMI project (www.amiproject.org). (C) 2005 DFKI GmbH.
+    </description>
+
+	<!-- set global properties for this class -->
+	<property name="src" location="../src" />
+	<property name="destdir" location="../class" />
+	<property name="doc" location="../docs/" />
+	<property name="dist" location="../dist" />
+	<property name="conf" location="../conf" />
+	<property name="lib" location="../lib" />
+	<property name="resdir" location="../res" />
+	<property name="plugins" location="../src/externalplugins" />
+
+	<path id="icons-libs" path="${lib}/icons.jar" />
+	<path id="jdom-libs" path="${lib}/jdom.jar" />
+	<path id="jh-libs" path="${lib}/jh.jar" />
+	<path id="jmanual-libs" path="${lib}/jmanual.jar" />
+	<path id="looks-libs" path="${lib}/looks.jar" />
+	<path id="nxt-libs" path="${lib}/nxt.jar" />
+	<path id="smoothmetal-libs" path="${lib}/smoothmetal.jar" />
+	<path id="xalan-libs" path="${lib}/xalan.jar" />
+	<path id="xercesImpl-libs" path="${lib}/xercesImpl.jar" />
+	<path id="xml-apis-libs" path="${lib}/xml-apis.jar" />
+
+	<target name="compileAndRun" depends="compile,run" />
+	
+	<target name="compileAllAndRun" depends="alldist, run"/>
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the class directory structure used by compile -->
+		<mkdir dir="${destdir}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the amigram source">
+		<!-- Compile the java code from ${src} to ${class} -->
+		<javac srcdir="${src}" destdir="${destdir}" source="1.5" excludes="externalplugins/**">
+			<classpath>
+				<pathelement location="${destdir}" />
+				<path refid="icons-libs" />
+				<path refid="jdom-libs" />
+				<path refid="jh-libs" />
+				<path refid="jmanual-libs" />
+				<path refid="looks-libs" />
+				<path refid="nxt-libs" />
+				<path refid="smoothmetal-libs" />
+				<path refid="xalan-libs" />
+				<path refid="xercesImpl-libs" />
+				<path refid="xml-apis-libs" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="compileplugins" depends="init" description="compile the externalplugins source">
+		<!-- Compile the java code from ${src} to ${class} -->
+		<javac srcdir="${plugins}" destdir="${destdir}" source="1.5">
+			<classpath>
+				<pathelement location="${destdir}" />
+				<path refid="icons-libs" />
+				<path refid="jdom-libs" />
+				<path refid="jh-libs" />
+				<path refid="jmanual-libs" />
+				<path refid="looks-libs" />
+				<path refid="nxt-libs" />
+				<path refid="smoothmetal-libs" />
+				<path refid="xalan-libs" />
+				<path refid="xercesImpl-libs" />
+				<path refid="xml-apis-libs" />
+			</classpath>
+		</javac>
+	</target>
+					
+	<target name="javadoc" description="create the javadoc">
+		<javadoc packagenames="de.dfki.*" sourcepath="../src" destdir="${doc}">
+			<classpath>
+				<path refid="icons-libs" />
+				<path refid="jdom-libs" />
+				<path refid="jh-libs" />
+				<path refid="jmanual-libs" />
+				<path refid="looks-libs" />
+				<path refid="nxt-libs" />
+				<path refid="smoothmetal-libs" />
+				<path refid="xalan-libs" />
+				<path refid="xercesImpl-libs" />
+				<path refid="xml-apis-libs" />
+			</classpath>
+		</javadoc>
+	</target>
+
+	<target name="run" depends="dist" description="run the application">
+		<java classname="de.dfki.ami.amigram.gui.MainFrame" fork="true" failonerror="true">
+			<classpath>
+				<pathelement location="${dist}/lib/amigram.jar" />
+				<pathelement location="${dist}/lib" />
+				
+				<path refid="icons-libs" />
+				<path refid="jdom-libs" />
+				<path refid="jh-libs" />
+				<path refid="jmanual-libs" />
+				<path refid="looks-libs" />
+				<path refid="nxt-libs" />
+				<path refid="smoothmetal-libs" />
+				<path refid="xalan-libs" />
+				<path refid="xercesImpl-libs" />
+				<path refid="xml-apis-libs" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution of amigram src">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+		<!-- Put everything in ${class} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/lib/amigram-${DSTAMP}.jar" basedir="${destdir}" excludes="externalplugins/**">
+			<fileset dir="${resdir}">
+				<include name="images/Osca.png" />
+				<include name="images/otab.gif" />
+				<include name="images/ZoomIn.gif" />
+				<include name="images/ZoomOut.gif" />
+				<include name="images/Up.gif" />
+				<include name="images/Down.gif" />
+				<include name="images/Add.gif" />
+				<include name="images/Del.gif" />
+				<include name="images/Spec.png" />
+				<include name="images/Remove.gif" />
+				<include name="images/splash.png" />
+				<include name="images/brushed_metal.jpg" />
+				
+			</fileset>
+		</jar>
+		<copy file="${dist}/lib/amigram-${DSTAMP}.jar" tofile="${dist}/lib/amigram.jar" />
+	</target>
+
+	<target name="pluginsdist" depends="compileplugins" description="generate the distribution of the plugins">
+		<mkdir dir="../plugins" />
+		<jar jarfile="../plugins/exampleplugin.jar"  basedir="${destdir}" includes="externalplugins/exampleplugin/**"></jar>
+		<jar jarfile="../plugins/plugon.jar"  basedir="${destdir}" includes="externalplugins/plugon/**"></jar>	
+	</target>
+
+	<!-- Compile all sources, amigram + externalplugins -->
+	<target name="all" depends="compile,compileplugins" />
+	
+	<!-- Make a distribution of all sources, amigram + externalplugins -->
+	<target name="alldist" depends="all,dist,pluginsdist" />
+	
+	<target name="clean" description="clean up">
+		<!-- Delete the ${class} and ${dist} directory trees -->
+		<delete dir="${destdir}" />
+		<delete dir="${dist}" />
+		<delete dir="${doc}" />
+		<delete dir="../plugins" />
+	</target>
+</project>

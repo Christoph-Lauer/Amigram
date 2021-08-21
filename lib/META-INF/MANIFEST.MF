@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.2
+Created-By: 1.4.2_07-b05 (Sun Microsystems Inc.)
+Built-By: Karsten
+Specification-Title: JGoodies Looks API Specification
+Specification-Vendor: JGoodies Karsten Lentzsch
+Specification-Version: 1.3
+Implementation-Title: JGoodies Looks
+Implementation-Vendor: JGoodies Karsten Lentzsch
+Implementation-Version: 1.3.1 2005-03-25 02:55:44
+
